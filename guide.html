@@ -319,11 +319,11 @@
 <body>
   <div class="app">
     <!-- Control panel -->
-    <aside class="panel">
+    <aside class="panel" id="editorPanel">
       <h2>编辑/导出/分享</h2>
       <p class="hint">
         1) 右侧海报里<strong>点文字即可编辑</strong>。<br/>
-        2) 图片使用你 GitHub(jsDelivr) 直链：客户打开分享链接也能看到图。<br/>
+        2) 图片使用 GitHub(jsDelivr) 直链：客户打开分享链接也能看到图。<br/>
         3) “导出PNG”用于发海报图；“生成分享链接”用于发可点击定位的网页链接。<br/>
         4) 如果你想部署后不带参数也显示最终版：编辑完成后点“固化为默认并下载HTML”，用下载的新文件替换仓库里的 guide.html。
       </p>
@@ -364,7 +364,7 @@
         <div class="field">
           <label>图片链接（建议用 jsDelivr 直链）</label>
           <div class="small">
-            你当前仓库直链示例：<br/>
+            直链示例：<br/>
             <span class="mono">https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/地图.jpg</span>
           </div>
         </div>
@@ -569,9 +569,26 @@
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <script>
+    // ===== 分享链接只读模式：隐藏编辑面板 =====
+    (function handleReadonlyMode(){
+      const params = new URLSearchParams(window.location.search);
+      const isShare = params.has("s");
+      if(isShare){
+        const panel = document.getElementById("editorPanel");
+        if(panel) panel.style.display = "none";
+
+        const app = document.querySelector(".app");
+        if(app){
+          app.style.gridTemplateColumns = "1fr";
+          app.style.maxWidth = "1000px";
+        }
+      }
+    })();
+
     // ===== helpers =====
     const toast = document.getElementById('toast');
     function showToast(msg){
+      if(!toast) return;
       toast.textContent = msg;
       toast.style.display = 'block';
       clearTimeout(showToast._t);
@@ -646,7 +663,7 @@
       s4: {input: imgS4Url, imgId: "img-s4"},
     };
 
-    // ===== defaults (your jsDelivr links) =====
+    // ===== defaults =====
     const DEFAULTS = {
       gateLink: "",
       dropoffLink: "",
@@ -662,22 +679,25 @@
     };
 
     function applyLinks(){
-      setLink(gateLinkBtn, safeUrl(gateLinkInput.value.trim()));
-      setLink(dropoffLinkBtn, safeUrl(dropoffLinkInput.value.trim()));
+      if(gateLinkBtn && gateLinkInput) setLink(gateLinkBtn, safeUrl(gateLinkInput.value.trim()));
+      if(dropoffLinkBtn && dropoffLinkInput) setLink(dropoffLinkBtn, safeUrl(dropoffLinkInput.value.trim()));
     }
-    gateLinkInput.addEventListener('input', applyLinks);
-    dropoffLinkInput.addEventListener('input', applyLinks);
+    if(gateLinkInput) gateLinkInput.addEventListener('input', applyLinks);
+    if(dropoffLinkInput) dropoffLinkInput.addEventListener('input', applyLinks);
 
-    makerNameInput.addEventListener('input', ()=>{
-      const v = makerNameInput.value.trim();
-      if(v) producerLine.textContent = v;
-    });
+    if(makerNameInput){
+      makerNameInput.addEventListener('input', ()=>{
+        const v = makerNameInput.value.trim();
+        if(v && producerLine) producerLine.textContent = v;
+      });
+    }
 
     // ===== image URL binding =====
     function setPosterImage(imgId, url){
       const img = document.getElementById(imgId);
       const ph = document.querySelector(`[data-ph="${imgId}"]`);
       const u = safeUrl(url);
+      if(!img) return;
       if(!u){
         img.removeAttribute("src");
         img.style.display = "none";
@@ -691,6 +711,7 @@
 
     function bindImgInputs(){
       Object.values(imgMap).forEach(({input, imgId})=>{
+        if(!input) return;
         input.addEventListener("input", ()=>{
           setPosterImage(imgId, input.value.trim());
         });
@@ -699,26 +720,26 @@
     bindImgInputs();
 
     function resetToDefaults(){
-      gateLinkInput.value = DEFAULTS.gateLink;
-      dropoffLinkInput.value = DEFAULTS.dropoffLink;
+      if(gateLinkInput) gateLinkInput.value = DEFAULTS.gateLink;
+      if(dropoffLinkInput) dropoffLinkInput.value = DEFAULTS.dropoffLink;
       applyLinks();
 
-      imgGateUrl.value = DEFAULTS.imgs.gate;
-      imgDropoffUrl.value = DEFAULTS.imgs.dropoff;
-      imgQrUrl.value = DEFAULTS.imgs.qr;
-      imgS1Url.value = DEFAULTS.imgs.s1;
-      imgS2Url.value = DEFAULTS.imgs.s2;
-      imgS3Url.value = DEFAULTS.imgs.s3;
-      imgS4Url.value = DEFAULTS.imgs.s4;
+      if(imgGateUrl) imgGateUrl.value = DEFAULTS.imgs.gate;
+      if(imgDropoffUrl) imgDropoffUrl.value = DEFAULTS.imgs.dropoff;
+      if(imgQrUrl) imgQrUrl.value = DEFAULTS.imgs.qr;
+      if(imgS1Url) imgS1Url.value = DEFAULTS.imgs.s1;
+      if(imgS2Url) imgS2Url.value = DEFAULTS.imgs.s2;
+      if(imgS3Url) imgS3Url.value = DEFAULTS.imgs.s3;
+      if(imgS4Url) imgS4Url.value = DEFAULTS.imgs.s4;
 
-      Object.entries(imgMap).forEach(([k, v])=>{
-        setPosterImage(v.imgId, v.input.value.trim());
+      Object.values(imgMap).forEach(({input, imgId})=>{
+        if(input) setPosterImage(imgId, input.value.trim());
       });
 
       showToast("已重置为默认图片/链接");
     }
 
-    resetBtn.addEventListener("click", resetToDefaults);
+    if(resetBtn) resetBtn.addEventListener("click", resetToDefaults);
 
     // ===== export PNG (wait images) =====
     function getVisibleImgs(container){
@@ -753,40 +774,42 @@
       await new Promise(requestAnimationFrame);
     }
 
-    exportBtn.addEventListener("click", async ()=>{
-      exportBtn.disabled = true;
-      showToast("正在导出PNG（加载图片中）…");
+    if(exportBtn){
+      exportBtn.addEventListener("click", async ()=>{
+        exportBtn.disabled = true;
+        showToast("正在导出PNG（加载图片中）…");
 
-      const exportWidth = Math.max(800, Math.min(2600, Number(exportWidthInput.value || 1600)));
-      const rect = poster.getBoundingClientRect();
-      const scale = exportWidth / rect.width;
+        const exportWidth = Math.max(800, Math.min(2600, Number((exportWidthInput && exportWidthInput.value) || 1600)));
+        const rect = poster.getBoundingClientRect();
+        const scale = exportWidth / rect.width;
 
-      try{
-        await waitForAllImages(poster, 25000);
+        try{
+          await waitForAllImages(poster, 25000);
 
-        const canvas = await html2canvas(poster, {
-          backgroundColor: "#ffffff",
-          scale,
-          useCORS: true,
-          allowTaint: true,
-          imageTimeout: 25000,
-          logging: false
-        });
+          const canvas = await html2canvas(poster, {
+            backgroundColor: "#ffffff",
+            scale,
+            useCORS: true,
+            allowTaint: true,
+            imageTimeout: 25000,
+            logging: false
+          });
 
-        const dataUrl = canvas.toDataURL("image/png");
-        const a = document.createElement("a");
-        const ts = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
-        a.download = `入校指引-${ts}.png`;
-        a.href = dataUrl;
-        a.click();
-        showToast("导出完成：已下载PNG");
-      }catch(err){
-        console.error(err);
-        alert("导出失败：可能是图片跨域/CORS 或加载超时。建议使用 jsDelivr 直链并重试。");
-      }finally{
-        exportBtn.disabled = false;
-      }
-    });
+          const dataUrl = canvas.toDataURL("image/png");
+          const a = document.createElement("a");
+          const ts = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+          a.download = `入校指引-${ts}.png`;
+          a.href = dataUrl;
+          a.click();
+          showToast("导出完成：已下载PNG");
+        }catch(err){
+          console.error(err);
+          alert("导出失败：可能是图片跨域/CORS 或加载超时。建议使用 jsDelivr 直链并重试。");
+        }finally{
+          exportBtn.disabled = false;
+        }
+      });
+    }
 
     // ===== share link (texts + links + image URLs) =====
     function collectState(){
@@ -797,15 +820,15 @@
 
       const imgUrls = {};
       Object.entries(imgMap).forEach(([k, v])=>{
-        imgUrls[k] = safeUrl(v.input.value.trim());
+        imgUrls[k] = safeUrl((v.input && v.input.value || "").trim());
       });
 
       return {
         v: 1,
         texts,
         links: {
-          gate: safeUrl(gateLinkInput.value.trim()),
-          dropoff: safeUrl(dropoffLinkInput.value.trim())
+          gate: safeUrl((gateLinkInput && gateLinkInput.value || "").trim()),
+          dropoff: safeUrl((dropoffLinkInput && dropoffLinkInput.value || "").trim())
         },
         imgUrls
       };
@@ -822,20 +845,20 @@
       }
 
       if(state.links){
-        gateLinkInput.value = state.links.gate || "";
-        dropoffLinkInput.value = state.links.dropoff || "";
+        if(gateLinkInput) gateLinkInput.value = state.links.gate || "";
+        if(dropoffLinkInput) dropoffLinkInput.value = state.links.dropoff || "";
         applyLinks();
       }
 
       if(state.imgUrls){
         Object.entries(imgMap).forEach(([k, v])=>{
           const url = state.imgUrls[k] || "";
-          v.input.value = url;
+          if(v.input) v.input.value = url;
           setPosterImage(v.imgId, url);
         });
       }
 
-      if(state.texts && state.texts.producer){
+      if(state.texts && state.texts.producer && makerNameInput){
         makerNameInput.value = state.texts.producer;
       }
     }
@@ -844,38 +867,44 @@
     function generateShareUrl(){
       const state = collectState();
       const packed = b64uEncode(JSON.stringify(state));
-      const base = window.location.href.split("?")[0]; // <-- 修复点
+      const base = window.location.href.split("?")[0];
       return base + "?s=" + packed;
     }
 
-    shareBtn.addEventListener("click", ()=>{
-      const url = generateShareUrl();
-      shareLinkArea.value = url;
-      showToast("分享链接已生成（客户打开可见图片，可点击定位）");
-    });
+    if(shareBtn){
+      shareBtn.addEventListener("click", ()=>{
+        const url = generateShareUrl();
+        if(shareLinkArea) shareLinkArea.value = url;
+        showToast("分享链接已生成（分享打开为只读展示）");
+      });
+    }
 
-    copyLinkBtn.addEventListener("click", async ()=>{
-      const url = shareLinkArea.value.trim();
-      if(!url){ showToast("请先生成分享链接"); return; }
-      try{
-        await navigator.clipboard.writeText(url);
-        showToast("已复制到剪贴板");
-      }catch(e){
-        shareLinkArea.select();
-        document.execCommand("copy");
-        showToast("已复制（兼容模式）");
-      }
-    });
+    if(copyLinkBtn){
+      copyLinkBtn.addEventListener("click", async ()=>{
+        const url = (shareLinkArea && shareLinkArea.value || "").trim();
+        if(!url){ showToast("请先生成分享链接"); return; }
+        try{
+          await navigator.clipboard.writeText(url);
+          showToast("已复制到剪贴板");
+        }catch(e){
+          if(shareLinkArea){
+            shareLinkArea.select();
+            document.execCommand("copy");
+          }
+          showToast("已复制（兼容模式）");
+        }
+      });
+    }
 
-    openLinkBtn.addEventListener("click", ()=>{
-      const url = shareLinkArea.value.trim();
-      if(!url){ showToast("请先生成分享链接"); return; }
-      window.open(url, "_blank", "noopener");
-    });
+    if(openLinkBtn){
+      openLinkBtn.addEventListener("click", ()=>{
+        const url = (shareLinkArea && shareLinkArea.value || "").trim();
+        if(!url){ showToast("请先生成分享链接"); return; }
+        window.open(url, "_blank", "noopener");
+      });
+    }
 
     // ===== 固化为默认并下载HTML（用于部署后不带 ?s= 也显示最终版） =====
-    function jsString(s){ return JSON.stringify(s ?? ""); }
-
     function downloadText(filename, text){
       const blob = new Blob([text], {type:"text/html;charset=utf-8"});
       const a = document.createElement("a");
@@ -906,7 +935,7 @@
         html = html.replace(/<script>/, `<script>\nconst PRESET_TEXTS = ${JSON.stringify(preset, null, 2)};\n`);
       }
 
-      // 3) 修改 init：没有 s 时先应用 PRESET_TEXTS，再 resetToDefaults（以便图片/链接生效）
+      // 3) 修改 init：没有 s 时先应用 PRESET_TEXTS，再 resetToDefaults
       const initRe = /\(function init\(\)\{[\s\S]*?\}\)\(\);/m;
       html = html.replace(initRe,
 `(function init(){
@@ -931,7 +960,7 @@
         const el = document.querySelector(\`[data-key="\${k}"]\`);
         if(el && typeof v === "string") el.innerText = v;
       });
-      if(PRESET_TEXTS.producer) makerNameInput.value = PRESET_TEXTS.producer;
+      if(PRESET_TEXTS.producer && makerNameInput) makerNameInput.value = PRESET_TEXTS.producer;
     }
   }catch(e){}
 
@@ -942,13 +971,15 @@
       return html;
     }
 
-    freezeBtn.addEventListener("click", ()=>{
-      const state = collectState();
-      const html = document.documentElement.outerHTML;
-      const out = patchDefaultsInHtml(html, state);
-      downloadText("guide.final.html", out);
-      showToast("已下载 guide.final.html（上传替换 guide.html 即可）");
-    });
+    if(freezeBtn){
+      freezeBtn.addEventListener("click", ()=>{
+        const state = collectState();
+        const html = document.documentElement.outerHTML;
+        const out = patchDefaultsInHtml(html, state);
+        downloadText("guide.final.html", out);
+        showToast("已下载 guide.final.html（上传替换 guide.html 即可）");
+      });
+    }
 
     // ===== init from URL =====
     (function init(){
