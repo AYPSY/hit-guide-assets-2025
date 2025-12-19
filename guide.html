@@ -106,7 +106,6 @@
       border-color:rgba(31,138,91,.40);
       background:#fff;
     }
-    .field input[type="file"]{width:100%}
     .divider{height:1px; background:var(--line); margin:12px 0}
     .small{font-size:12px; color:var(--muted); line-height:1.6}
     .toast{margin-top:10px; font-size:12px; color:var(--muted); display:none}
@@ -325,7 +324,8 @@
       <p class="hint">
         1) 右侧海报里<strong>点文字即可编辑</strong>。<br/>
         2) 图片使用你 GitHub(jsDelivr) 直链：客户打开分享链接也能看到图。<br/>
-        3) “导出PNG”用于发海报图；“生成分享链接”用于发可点击定位的网页链接。
+        3) “导出PNG”用于发海报图；“生成分享链接”用于发可点击定位的网页链接。<br/>
+        4) 如果你想部署后不带参数也显示最终版：编辑完成后点“固化为默认并下载HTML”，用下载的新文件替换仓库里的 guide.html。
       </p>
 
       <div class="controls">
@@ -410,12 +410,13 @@
           <button id="shareBtn">生成分享链接</button>
           <button class="secondary" id="copyLinkBtn">复制链接</button>
           <button class="secondary" id="openLinkBtn">打开链接</button>
+          <button class="secondary" id="freezeBtn">固化为默认并下载HTML</button>
         </div>
 
         <div class="field">
           <label>分享链接（客户打开可见图片，可点击定位）</label>
           <textarea id="shareLink" class="mono" readonly placeholder="点击“生成分享链接”后出现在这里"></textarea>
-          <div class="small">若链接过长：建议采用 GitHub Pages 部署（我可以给你一步到位的部署说明）。</div>
+          <div class="small">提示：部署到 GitHub Pages 后，再生成分享链接，前缀会自动变成 https://... 的公网链接。</div>
         </div>
 
         <div class="toast" id="toast"></div>
@@ -610,6 +611,7 @@
 
     const exportBtn = document.getElementById('exportBtn');
     const resetBtn = document.getElementById('resetBtn');
+    const freezeBtn = document.getElementById('freezeBtn');
     const exportWidthInput = document.getElementById('exportWidth');
 
     const gateLinkInput = document.getElementById('gateLink');
@@ -646,11 +648,8 @@
 
     // ===== defaults (your jsDelivr links) =====
     const DEFAULTS = {
-      // 你可按需替换为你的真实地图/下车点链接
       gateLink: "",
       dropoffLink: "",
-
-      // 你的 jsDelivr 图片直链
       imgs: {
         gate: "https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/地图.jpg",
         dropoff: "https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/西南门.png",
@@ -841,10 +840,11 @@
       }
     }
 
+    // ✅ 关键修复：分享链接前缀用 href（兼容 file:/// 与 https://）
     function generateShareUrl(){
       const state = collectState();
       const packed = b64uEncode(JSON.stringify(state));
-      const base = window.location.origin + window.location.pathname;
+      const base = window.location.href.split("?")[0]; // <-- 修复点
       return base + "?s=" + packed;
     }
 
@@ -871,6 +871,83 @@
       const url = shareLinkArea.value.trim();
       if(!url){ showToast("请先生成分享链接"); return; }
       window.open(url, "_blank", "noopener");
+    });
+
+    // ===== 固化为默认并下载HTML（用于部署后不带 ?s= 也显示最终版） =====
+    function jsString(s){ return JSON.stringify(s ?? ""); }
+
+    function downloadText(filename, text){
+      const blob = new Blob([text], {type:"text/html;charset=utf-8"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      setTimeout(()=> URL.revokeObjectURL(a.href), 2000);
+    }
+
+    function patchDefaultsInHtml(html, state){
+      // 1) 替换 DEFAULTS（让默认链接/默认图片 = 当前状态）
+      const newDefaults = {
+        gateLink: state.links?.gate || "",
+        dropoffLink: state.links?.dropoff || "",
+        imgs: state.imgUrls || {}
+      };
+
+      const defaultsRe = /const\s+DEFAULTS\s*=\s*\{[\s\S]*?\};/m;
+      html = html.replace(defaultsRe, `const DEFAULTS = ${JSON.stringify(newDefaults, null, 2)};`);
+
+      // 2) 注入 PRESET_TEXTS（默认文字 = 当前状态）
+      const preset = state.texts || {};
+      const presetRe = /const\s+PRESET_TEXTS\s*=\s*\{[\s\S]*?\};/m;
+
+      if(presetRe.test(html)){
+        html = html.replace(presetRe, `const PRESET_TEXTS = ${JSON.stringify(preset, null, 2)};`);
+      }else{
+        html = html.replace(/<script>/, `<script>\nconst PRESET_TEXTS = ${JSON.stringify(preset, null, 2)};\n`);
+      }
+
+      // 3) 修改 init：没有 s 时先应用 PRESET_TEXTS，再 resetToDefaults（以便图片/链接生效）
+      const initRe = /\(function init\(\)\{[\s\S]*?\}\)\(\);/m;
+      html = html.replace(initRe,
+`(function init(){
+  const params = new URLSearchParams(window.location.search);
+  const s = params.get("s");
+  if(s){
+    try{
+      const json = b64uDecode(s);
+      const state = JSON.parse(json);
+      applyState(state);
+      showToast("已从分享链接载入内容");
+      return;
+    }catch(e){
+      console.warn(e);
+    }
+  }
+
+  // 无参数：使用固化的默认文字 + 默认链接/图片
+  try{
+    if(typeof PRESET_TEXTS === "object" && PRESET_TEXTS){
+      Object.entries(PRESET_TEXTS).forEach(([k,v])=>{
+        const el = document.querySelector(\`[data-key="\${k}"]\`);
+        if(el && typeof v === "string") el.innerText = v;
+      });
+      if(PRESET_TEXTS.producer) makerNameInput.value = PRESET_TEXTS.producer;
+    }
+  }catch(e){}
+
+  resetToDefaults();
+})();`
+      );
+
+      return html;
+    }
+
+    freezeBtn.addEventListener("click", ()=>{
+      const state = collectState();
+      const html = document.documentElement.outerHTML;
+      const out = patchDefaultsInHtml(html, state);
+      downloadText("guide.final.html", out);
+      showToast("已下载 guide.final.html（上传替换 guide.html 即可）");
     });
 
     // ===== init from URL =====
