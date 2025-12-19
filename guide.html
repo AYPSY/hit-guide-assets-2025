@@ -1,1011 +1,174 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>哈工大深圳校区入校指引（可编辑/导出PNG/生成链接）</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>哈工大深圳校区入校指引</title>
 
-  <style>
-    :root{
-      --bg:#f3f7f5;
-      --card:#ffffff;
-      --ink:#0b1324;
-      --muted:#42556a;
-      --line:#dbe7e3;
+<style>
+:root{
+  --bg:#f3f7f5;--card:#fff;--ink:#0b1324;--muted:#42556a;--line:#dbe7e3;
+  --navy:#0f2d5c;--green:#1f8a5b;--warn:#b42318;
+  --radius:18px;--shadow:0 12px 34px rgba(11,19,36,.08);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei";
+  color:var(--ink);
+  background:radial-gradient(900px 450px at 15% 10%, rgba(31,138,91,.10), transparent 55%),
+             radial-gradient(900px 450px at 85% 20%, rgba(15,45,92,.10), transparent 55%),var(--bg);
+}
+.app{max-width:1240px;margin:22px auto;padding:0 16px 42px;
+  display:grid;grid-template-columns:420px 1fr;gap:16px}
+@media(max-width:980px){.app{grid-template-columns:1fr}}
 
-      --navy:#0f2d5c;
-      --green:#1f8a5b;
-      --warn:#b42318;
+.panel{
+  background:#fff;border:1px solid var(--line);border-radius:18px;
+  box-shadow:var(--shadow);padding:16px;position:sticky;top:16px
+}
+.panel h2{margin:0 0 10px;font-size:16px}
+.controls{display:flex;flex-direction:column;gap:10px}
+button{
+  background:linear-gradient(135deg,var(--navy),#143a77);color:#fff;
+  border:none;border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer
+}
+button.secondary{background:#fff;color:#000;border:1px solid var(--line)}
 
-      --radius:18px;
-      --shadow:0 12px 34px rgba(11,19,36,.08);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-      color:var(--ink);
-      background:
-        radial-gradient(900px 450px at 15% 10%, rgba(31,138,91,.10), transparent 55%),
-        radial-gradient(900px 450px at 85% 20%, rgba(15,45,92,.10), transparent 55%),
-        var(--bg);
-    }
-    .app{
-      max-width:1240px;
-      margin:22px auto;
-      padding:0 16px 42px;
-      display:grid;
-      grid-template-columns: 420px 1fr;
-      gap:16px;
-      align-items:start;
-    }
-    @media (max-width: 980px){ .app{grid-template-columns:1fr} }
+.stage{background:#fff;border-radius:24px;border:1px solid var(--line);
+  box-shadow:var(--shadow);overflow:hidden}
+.poster{padding:22px}
+.topbar{display:flex;justify-content:space-between;gap:16px;
+  padding:16px;border-radius:18px;border:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(31,138,91,.1),rgba(15,45,92,.07))}
+.brand .uni{font-weight:800;color:var(--navy)}
+.brand .title{font-size:30px;font-weight:900}
+.badge{background:#e9f7ef;border-radius:999px;padding:6px 10px;font-weight:800}
 
-    /* Panel */
-    .panel{
-      background:linear-gradient(180deg, #ffffff, #fbfdfc);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:16px;
-      position:sticky;
-      top:16px;
-      height:fit-content;
-    }
-    .panel h2{margin:0 0 10px; font-size:16px}
-    .panel .hint{color:var(--muted); font-size:12px; line-height:1.65; margin:0 0 12px}
-    .controls{display:flex; flex-direction:column; gap:10px}
-    .row{display:flex; gap:10px; flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
 
-    button{
-      appearance:none;
-      border:1px solid transparent;
-      background:linear-gradient(135deg, var(--navy), #143a77);
-      color:#fff;
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:900;
-      letter-spacing:.2px;
-      box-shadow:0 10px 18px rgba(15,45,92,.18);
-    }
-    button.secondary{
-      background:#fff;
-      color:var(--ink);
-      border-color:var(--line);
-      box-shadow:none;
-    }
-    button:disabled{opacity:.6; cursor:not-allowed}
+.card{border:1px solid var(--line);border-radius:18px;padding:14px}
+.card h3{margin:0 0 10px;font-size:16px;display:flex;gap:10px;align-items:center}
+.num{width:30px;height:30px;border-radius:999px;background:var(--green);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900}
 
-    .field{
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:10px 12px;
-      background:#fff;
-    }
-    .field label{
-      display:block;
-      font-size:12px;
-      color:var(--muted);
-      margin-bottom:6px;
-      font-weight:900;
-    }
-    .field input[type="number"], .field input[type="text"], .field input[type="url"], .field textarea{
-      width:100%;
-      padding:10px 10px;
-      border:1px solid var(--line);
-      border-radius:12px;
-      font-size:14px;
-      outline:none;
-      background:#fbfdfc;
-      font-family:inherit;
-    }
-    .field textarea{min-height:70px; resize:vertical}
-    .field input:focus, .field textarea:focus{
-      box-shadow:0 0 0 3px rgba(31,138,91,.18);
-      border-color:rgba(31,138,91,.40);
-      background:#fff;
-    }
-    .divider{height:1px; background:var(--line); margin:12px 0}
-    .small{font-size:12px; color:var(--muted); line-height:1.6}
-    .toast{margin-top:10px; font-size:12px; color:var(--muted); display:none}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+.imgBox{margin-top:10px;height:220px;border:1px dashed #ccc;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.imgBox img{width:100%;height:100%;object-fit:cover}
 
-    /* Stage */
-    .stageWrap{display:flex; justify-content:center; align-items:flex-start;}
-    .stage{
-      width:960px;
-      background:#fff;
-      border-radius:24px;
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-    @media (max-width: 980px){ .stage{width:100%} }
+.locBtn{display:inline-flex;align-items:center;gap:6px;
+  border:1px solid var(--green);padding:6px 10px;border-radius:999px;
+  text-decoration:none;color:var(--green);font-weight:800}
 
-    .poster{
-      padding:22px 22px 18px;
-      position:relative;
-    }
-    .poster:before{
-      content:"";
-      position:absolute;
-      inset:-40px -40px auto auto;
-      width:260px;height:260px;
-      background:radial-gradient(circle at 30% 30%, rgba(31,138,91,.18), transparent 60%);
-      pointer-events:none;
-    }
-    .poster:after{
-      content:"";
-      position:absolute;
-      inset:auto auto -60px -60px;
-      width:320px;height:320px;
-      background:radial-gradient(circle at 60% 50%, rgba(15,45,92,.14), transparent 62%);
-      pointer-events:none;
-    }
+.editable[contenteditable="true"]:focus{
+  outline:none;box-shadow:0 0 0 3px rgba(31,138,91,.2)
+}
 
-    .topbar{
-      position:relative;
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-end;
-      gap:16px;
-      padding:16px 16px 14px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:linear-gradient(135deg, rgba(31,138,91,.10), rgba(15,45,92,.07));
-    }
-    .brand{display:flex; flex-direction:column; gap:6px}
-    .brand .uni{font-weight:1100; color:var(--navy); letter-spacing:.4px; font-size:18px;}
-    .brand .title{font-size:32px; font-weight:1200; line-height:1.12; color:#0a1c3f;}
-    .badge{
-      align-self:flex-start;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(31,138,91,.35);
-      background:rgba(233,247,239,.75);
-      color:var(--green);
-      font-weight:1100;
-      font-size:12px;
-      white-space:nowrap;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
-      margin-top:14px;
-      position:relative;
-      z-index:1;
-    }
-    @media (max-width: 760px){ .grid{grid-template-columns:1fr} }
-
-    .card{
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px 14px 12px;
-      background:#fff;
-    }
-    .card h3{
-      margin:0 0 10px;
-      font-size:16px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-    .num{
-      width:30px;height:30px;border-radius:999px;
-      display:inline-flex;align-items:center;justify-content:center;
-      background:linear-gradient(135deg, var(--green), #2aa86f);
-      color:#fff;
-      font-weight:1100;
-      font-size:14px;
-      box-shadow:0 10px 16px rgba(31,138,91,.20);
-      flex:0 0 auto;
-    }
-    .card p, .card li{margin:0; color:var(--muted); line-height:1.65; font-size:14px;}
-    .card ul{margin:0; padding-left:18px; display:flex; flex-direction:column; gap:6px;}
-
-    .imgBox{
-      margin-top:10px;
-      border:1px dashed rgba(15,45,92,.22);
-      border-radius:16px;
-      height:230px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      background:linear-gradient(180deg, #f8fbfa, #f3faf6);
-      position:relative;
-    }
-    .imgBox.smallH{height:165px}
-    .imgBox img{width:100%; height:100%; object-fit:cover; display:block;}
-    .imgBox .ph{padding:12px 14px; color:#5a6d80; font-size:13px; text-align:center}
-
-    .locRow{
-      margin-top:10px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    .locBtn{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(31,138,91,.35);
-      background:rgba(233,247,239,.75);
-      color:var(--green);
-      font-size:12px;
-      font-weight:1100;
-      text-decoration:none;
-      cursor:pointer;
-      user-select:none;
-    }
-    .locBtn.disabled{opacity:.55; pointer-events:none;}
-    .locBtn .dot{
-      width:8px;height:8px;border-radius:99px;background:var(--green);
-      box-shadow:0 0 0 4px rgba(31,138,91,.12);
-    }
-    .locHint{font-size:12px; color:#5a6d80;}
-
-    .steps{grid-column:1 / -1}
-    .stepGrid{display:grid; grid-template-columns: 1fr 1fr; gap:12px;}
-    @media (max-width: 760px){ .stepGrid{grid-template-columns:1fr} }
-
-    .step{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px;
-      background:#fff;
-      display:grid;
-      grid-template-columns: 1fr 170px;
-      gap:12px;
-      align-items:stretch;
-    }
-    @media (max-width: 760px){ .step{grid-template-columns:1fr} }
-    .step h4{margin:0 0 8px; font-size:14px; display:flex; gap:8px; align-items:center;}
-    .pill{
-      background:rgba(15,45,92,.08);
-      color:var(--navy);
-      border:1px solid rgba(15,45,92,.18);
-      font-weight:1200;
-      font-size:12px;
-      padding:4px 8px;
-      border-radius:999px;
-    }
-    .warn{color:var(--warn); font-weight:1200;}
-
-    .footerNote{
-      margin-top:12px;
-      padding:12px 14px;
-      background:linear-gradient(135deg, rgba(233,247,239,.85), rgba(15,45,92,.05));
-      border:1px solid var(--line);
-      border-radius:18px;
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      position:relative;
-      z-index:1;
-    }
-    .footerNote .left{color:var(--muted); font-size:12px; line-height:1.7}
-    .footerNote .right{color:var(--muted); font-size:12px; text-align:right}
-
-    .producer{
-      margin-top:10px;
-      text-align:right;
-      font-size:11px;
-      color:#6b7f93;
-      padding-right:4px;
-      position:relative;
-      z-index:1;
-    }
-
-    .editable[contenteditable="true"]{
-      outline:none;
-      border-radius:10px;
-      padding:2px 4px;
-    }
-    .editable[contenteditable="true"]:focus{
-      box-shadow:0 0 0 3px rgba(31,138,91,.16);
-      background:#fff;
-    }
-  </style>
+/* ===== 分享模式防篡改 ===== */
+.readonly-mode{
+  user-select:none;
+}
+.readonly-mode .editable{
+  pointer-events:none;
+}
+.readonly-mode a{
+  pointer-events:auto;
+}
+</style>
 </head>
 
 <body>
-  <div class="app">
-    <!-- Control panel -->
-    <aside class="panel" id="editorPanel">
-      <h2>编辑/导出/分享</h2>
-      <p class="hint">
-        1) 右侧海报里<strong>点文字即可编辑</strong>。<br/>
-        2) 图片使用 GitHub(jsDelivr) 直链：客户打开分享链接也能看到图。<br/>
-        3) “导出PNG”用于发海报图；“生成分享链接”用于发可点击定位的网页链接。<br/>
-        4) 如果你想部署后不带参数也显示最终版：编辑完成后点“固化为默认并下载HTML”，用下载的新文件替换仓库里的 guide.html。
-      </p>
+<div class="app">
+  <aside class="panel" id="editorPanel">
+    <h2>编辑 / 导出 / 分享</h2>
+    <button id="exportBtn">导出 PNG</button>
+    <button class="secondary" id="shareBtn">生成分享链接</button>
+    <textarea id="shareLink" style="width:100%;margin-top:10px" readonly></textarea>
+  </aside>
 
-      <div class="controls">
-        <div class="row">
-          <button id="exportBtn">导出PNG</button>
-          <button class="secondary" id="resetBtn">重置为默认图</button>
+  <main class="stage">
+    <div class="poster" id="poster">
+      <div class="topbar">
+        <div class="brand">
+          <div class="uni editable" contenteditable="true" data-key="uni">哈工大深圳校区</div>
+          <div class="title editable" contenteditable="true" data-key="title">入校指引</div>
         </div>
-
-        <div class="field">
-          <label>导出PNG宽度（像素）</label>
-          <input id="exportWidth" type="number" min="800" max="2600" value="1600"/>
-          <div class="small">建议：微信转发 1400–1800；打印建议 ≥ 2000。</div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="field">
-          <label>地点链接：东南门定位（URL，可点击）</label>
-          <input id="gateLink" type="url" placeholder="粘贴地图链接（高德/腾讯/百度/Google 等）" />
-        </div>
-
-        <div class="field">
-          <label>地点链接：下车点/停车处（URL，可点击）</label>
-          <input id="dropoffLink" type="url" placeholder="粘贴地图链接（下车点/接驳点/临停点）" />
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="field">
-          <label>制作人小字（底部）</label>
-          <input id="makerName" type="text" placeholder="例如：制作人：AYPSY" />
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="field">
-          <label>图片链接（建议用 jsDelivr 直链）</label>
-          <div class="small">
-            直链示例：<br/>
-            <span class="mono">https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/地图.jpg</span>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>东南门定位图（URL）</label>
-          <input id="imgGateUrl" type="url" />
-        </div>
-
-        <div class="field">
-          <label>下车点/停车说明图（URL）</label>
-          <input id="imgDropoffUrl" type="url" />
-        </div>
-
-        <div class="field">
-          <label>公众号二维码（URL）</label>
-          <input id="imgQrUrl" type="url" />
-        </div>
-
-        <div class="field">
-          <label>Step1 截图（URL）</label>
-          <input id="imgS1Url" type="url" />
-        </div>
-
-        <div class="field">
-          <label>Step2 截图（URL）</label>
-          <input id="imgS2Url" type="url" />
-        </div>
-
-        <div class="field">
-          <label>Step3 截图（URL）</label>
-          <input id="imgS3Url" type="url" />
-        </div>
-
-        <div class="field">
-          <label>Step4 截图（URL）</label>
-          <input id="imgS4Url" type="url" />
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="row">
-          <button id="shareBtn">生成分享链接</button>
-          <button class="secondary" id="copyLinkBtn">复制链接</button>
-          <button class="secondary" id="openLinkBtn">打开链接</button>
-          <button class="secondary" id="freezeBtn">固化为默认并下载HTML</button>
-        </div>
-
-        <div class="field">
-          <label>分享链接（客户打开可见图片，可点击定位）</label>
-          <textarea id="shareLink" class="mono" readonly placeholder="点击“生成分享链接”后出现在这里"></textarea>
-          <div class="small">提示：部署到 GitHub Pages 后，再生成分享链接，前缀会自动变成 https://... 的公网链接。</div>
-        </div>
-
-        <div class="toast" id="toast"></div>
+        <div class="badge editable" contenteditable="true" data-key="badge">东南门进校版</div>
       </div>
-    </aside>
 
-    <!-- Poster -->
-    <main class="stageWrap">
-      <section class="stage">
-        <div class="poster" id="poster">
-          <div class="topbar">
-            <div class="brand">
-              <div class="uni editable" contenteditable="true" data-key="uni">哈工大深圳校区</div>
-              <div class="title editable" contenteditable="true" data-key="title">入校指引</div>
-            </div>
-            <div class="badge editable" contenteditable="true" data-key="badge">东南门进校版</div>
-          </div>
-
-          <div class="grid">
-            <div class="card">
-              <h3><span class="num">1</span><span class="editable" contenteditable="true" data-key="h1">东南门定位</span></h3>
-              <ul>
-                <li class="editable" contenteditable="true" data-key="p1a">驾车入校请从“深圳大学城东南门”进入</li>
-                <li class="editable" contenteditable="true" data-key="p1b">请提前完成入城登记（见第3部分），入门需出示登记记录</li>
-              </ul>
-
-              <div class="locRow">
-                <a class="locBtn disabled" id="gateLinkBtn" href="#" target="_blank" rel="noopener">
-                  <span class="dot"></span><span class="editable" contenteditable="true" data-key="gateBtnText">打开东南门定位</span>
-                </a>
-                <span class="locHint editable" contenteditable="true" data-key="gateHint">（点击跳转地图）</span>
-              </div>
-
-              <div class="imgBox">
-                <div class="ph" data-ph="img-gate">将“东南门定位图URL”填入左侧即可显示</div>
-                <img id="img-gate" alt="东南门定位图" style="display:none" crossorigin="anonymous" />
-              </div>
-            </div>
-
-            <div class="card">
-              <h3><span class="num">2</span><span class="editable" contenteditable="true" data-key="h2">下车点/停车说明</span></h3>
-              <ul>
-                <li class="editable" contenteditable="true" data-key="p2a">车辆进入校园后在指定位置下客</li>
-                <li class="editable" contenteditable="true" data-key="p2b">深圳大学城内不设大巴车停车位</li>
-                <li class="editable" contenteditable="true" data-key="p2c">司机下客后请驶离校园（校内车位紧张）</li>
-              </ul>
-
-              <div class="locRow">
-                <a class="locBtn disabled" id="dropoffLinkBtn" href="#" target="_blank" rel="noopener">
-                  <span class="dot"></span><span class="editable" contenteditable="true" data-key="dropoffBtnText">打开下车点位置</span>
-                </a>
-                <span class="locHint editable" contenteditable="true" data-key="dropoffHint">（点击跳转地图）</span>
-              </div>
-
-              <div class="imgBox">
-                <div class="ph" data-ph="img-dropoff">将“下车点/停车说明图URL”填入左侧即可显示</div>
-                <img id="img-dropoff" alt="下车点/停车说明图" style="display:none" crossorigin="anonymous" />
-              </div>
-            </div>
-
-            <div class="card steps">
-              <h3><span class="num">3</span><span class="editable" contenteditable="true" data-key="h3">入校自助报备（入城登记）</span></h3>
-
-              <div class="stepGrid">
-                <div class="step">
-                  <div>
-                    <h4><span class="pill">Step 1</span><span class="editable" contenteditable="true" data-key="s1t">关注公众号</span></h4>
-                    <p class="editable" contenteditable="true" data-key="s1p">扫码或搜索关注「深圳大学城校园服务」</p>
-                  </div>
-                  <div class="imgBox smallH">
-                    <div class="ph" data-ph="img-qr">将“二维码URL”填入左侧即可显示</div>
-                    <img id="img-qr" alt="二维码" style="display:none" crossorigin="anonymous" />
-                  </div>
-                </div>
-
-                <div class="step">
-                  <div>
-                    <h4><span class="pill">Step 2</span><span class="editable" contenteditable="true" data-key="s2t">进入入城登记</span></h4>
-                    <p class="editable" contenteditable="true" data-key="s2p">点击：校园服务 → 入城登记</p>
-                  </div>
-                  <div class="imgBox smallH">
-                    <div class="ph" data-ph="img-s1">将“Step1截图URL”填入左侧即可显示</div>
-                    <img id="img-s1" alt="Step1截图" style="display:none" crossorigin="anonymous" />
-                  </div>
-                </div>
-
-                <div class="step">
-                  <div>
-                    <h4><span class="pill">Step 3</span><span class="editable" contenteditable="true" data-key="s3t">点击去登记</span></h4>
-                    <p class="editable" contenteditable="true" data-key="s3p">点击“去登记”，进入填写页面</p>
-                  </div>
-                  <div class="imgBox smallH">
-                    <div class="ph" data-ph="img-s2">将“Step2截图URL”填入左侧即可显示</div>
-                    <img id="img-s2" alt="Step2截图" style="display:none" crossorigin="anonymous" />
-                  </div>
-                </div>
-
-                <div class="step">
-                  <div>
-                    <h4><span class="pill">Step 4</span><span class="editable" contenteditable="true" data-key="s4t">填写信息并提交</span></h4>
-                    <p class="editable" contenteditable="true" data-key="s4p1">姓名/电话/证件号；驾车或打车请填写车牌号</p>
-                    <p class="warn editable" contenteditable="true" data-key="s4p2">登记有效期为两天（当天及次日）</p>
-                    <p class="editable" contenteditable="true" data-key="s4p3">到门口出示登记记录给保安核验即可放行</p>
-                  </div>
-                  <div class="imgBox smallH">
-                    <div class="ph" data-ph="img-s3">将“Step3截图URL”填入左侧即可显示</div>
-                    <img id="img-s3" alt="Step3截图" style="display:none" crossorigin="anonymous" />
-                  </div>
-                </div>
-
-                <div class="step">
-                  <div>
-                    <h4><span class="pill">补充</span><span class="editable" contenteditable="true" data-key="s5t">登记页面示意</span></h4>
-                    <p class="editable" contenteditable="true" data-key="s5p">如需展示填写页面，可放在此处</p>
-                  </div>
-                  <div class="imgBox smallH">
-                    <div class="ph" data-ph="img-s4">将“Step4截图URL”填入左侧即可显示</div>
-                    <img id="img-s4" alt="Step4截图" style="display:none" crossorigin="anonymous" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card">
-              <h3><span class="num">i</span><span class="editable" contenteditable="true" data-key="hi">备注</span></h3>
-              <p class="editable" contenteditable="true" data-key="note">
-                如安保政策临时调整，以现场要求为准。建议尽量绿色出行，减少校内拥堵。
-              </p>
-            </div>
-          </div>
-
-          <div class="footerNote">
-            <div class="left editable" contenteditable="true" data-key="footL">
-              建议：发客户用“分享链接”；发群/打印用“导出PNG”。
-            </div>
-            <div class="right editable" contenteditable="true" data-key="footR">
-              版本：V1｜更新时间：____-__-__
-            </div>
-          </div>
-
-          <div class="producer editable" id="producerLine" contenteditable="true" data-key="producer">
-            制作人：________
+      <div class="grid">
+        <div class="card">
+          <h3><span class="num">1</span>
+            <span class="editable" contenteditable="true" data-key="h1">东南门定位</span>
+          </h3>
+          <a class="locBtn" href="https://surl.amap.com/2AgmXGfP1p1i1" target="_blank">
+            打开地图
+          </a>
+          <div class="imgBox">
+            <img src="https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/地图.jpg">
           </div>
         </div>
-      </section>
-    </main>
-  </div>
 
-  <!-- html2canvas -->
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+        <div class="card">
+          <h3><span class="num">2</span>
+            <span class="editable" contenteditable="true" data-key="h2">下车点说明</span>
+          </h3>
+          <div class="imgBox">
+            <img src="https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/西南门.png">
+          </div>
+        </div>
+      </div>
 
-  <script>
-    // ===== 分享链接只读模式：隐藏编辑面板 =====
-    (function handleReadonlyMode(){
-      const params = new URLSearchParams(window.location.search);
-      const isShare = params.has("s");
-      if(isShare){
-        const panel = document.getElementById("editorPanel");
-        if(panel) panel.style.display = "none";
+      <p style="text-align:right;margin-top:12px" class="editable" contenteditable="true" data-key="producer">
+        制作人：AYPSY
+      </p>
+    </div>
+  </main>
+</div>
 
-        const app = document.querySelector(".app");
-        if(app){
-          app.style.gridTemplateColumns = "1fr";
-          app.style.maxWidth = "1000px";
-        }
-      }
-    })();
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+(function(){
+  const params=new URLSearchParams(location.search);
+  const isShare=params.has("s");
 
-    // ===== helpers =====
-    const toast = document.getElementById('toast');
-    function showToast(msg){
-      if(!toast) return;
-      toast.textContent = msg;
-      toast.style.display = 'block';
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(()=> toast.style.display='none', 2400);
-    }
-    function safeUrl(u){
-      if(!u) return "";
-      try{ return new URL(u).href; }catch(e){ return ""; }
-    }
-    function setLink(btn, url){
-      if(url){
-        btn.href = url;
-        btn.classList.remove('disabled');
-      }else{
-        btn.href = "#";
-        btn.classList.add('disabled');
-      }
-    }
-
-    // UTF-8 safe base64url
-    function b64uEncode(str){
-      const bytes = new TextEncoder().encode(str);
-      let bin = "";
-      bytes.forEach(b => bin += String.fromCharCode(b));
-      return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-    }
-    function b64uDecode(b64u){
-      const b64 = (b64u || "").replace(/-/g,'+').replace(/_/g,'/');
-      const pad = b64.length % 4 ? "=".repeat(4 - (b64.length % 4)) : "";
-      const bin = atob(b64 + pad);
-      const bytes = new Uint8Array([...bin].map(ch => ch.charCodeAt(0)));
-      return new TextDecoder().decode(bytes);
-    }
-
-    // ===== elements =====
-    const poster = document.getElementById('poster');
-
-    const exportBtn = document.getElementById('exportBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const freezeBtn = document.getElementById('freezeBtn');
-    const exportWidthInput = document.getElementById('exportWidth');
-
-    const gateLinkInput = document.getElementById('gateLink');
-    const dropoffLinkInput = document.getElementById('dropoffLink');
-    const gateLinkBtn = document.getElementById('gateLinkBtn');
-    const dropoffLinkBtn = document.getElementById('dropoffLinkBtn');
-
-    const makerNameInput = document.getElementById('makerName');
-    const producerLine = document.getElementById('producerLine');
-
-    const shareBtn = document.getElementById('shareBtn');
-    const copyLinkBtn = document.getElementById('copyLinkBtn');
-    const openLinkBtn = document.getElementById('openLinkBtn');
-    const shareLinkArea = document.getElementById('shareLink');
-
-    const imgGateUrl = document.getElementById('imgGateUrl');
-    const imgDropoffUrl = document.getElementById('imgDropoffUrl');
-    const imgQrUrl = document.getElementById('imgQrUrl');
-    const imgS1Url = document.getElementById('imgS1Url');
-    const imgS2Url = document.getElementById('imgS2Url');
-    const imgS3Url = document.getElementById('imgS3Url');
-    const imgS4Url = document.getElementById('imgS4Url');
-
-    // images on poster
-    const imgMap = {
-      gate: {input: imgGateUrl, imgId: "img-gate"},
-      dropoff: {input: imgDropoffUrl, imgId: "img-dropoff"},
-      qr: {input: imgQrUrl, imgId: "img-qr"},
-      s1: {input: imgS1Url, imgId: "img-s1"},
-      s2: {input: imgS2Url, imgId: "img-s2"},
-      s3: {input: imgS3Url, imgId: "img-s3"},
-      s4: {input: imgS4Url, imgId: "img-s4"},
-    };
-
-    // ===== defaults =====
-    const DEFAULTS = {
-      gateLink: "",
-      dropoffLink: "",
-      imgs: {
-        gate: "https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/地图.jpg",
-        dropoff: "https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/西南门.png",
-        qr: "https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/二维码.jpg",
-        s1: "https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/第一步.png",
-        s2: "https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/第二步.png",
-        s3: "https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/第三步.png",
-        s4: "https://cdn.jsdelivr.net/gh/AYPSY/hit-guide-assets-2025@main/images/第四步.png",
-      }
-    };
-
-    function applyLinks(){
-      if(gateLinkBtn && gateLinkInput) setLink(gateLinkBtn, safeUrl(gateLinkInput.value.trim()));
-      if(dropoffLinkBtn && dropoffLinkInput) setLink(dropoffLinkBtn, safeUrl(dropoffLinkInput.value.trim()));
-    }
-    if(gateLinkInput) gateLinkInput.addEventListener('input', applyLinks);
-    if(dropoffLinkInput) dropoffLinkInput.addEventListener('input', applyLinks);
-
-    if(makerNameInput){
-      makerNameInput.addEventListener('input', ()=>{
-        const v = makerNameInput.value.trim();
-        if(v && producerLine) producerLine.textContent = v;
-      });
-    }
-
-    // ===== image URL binding =====
-    function setPosterImage(imgId, url){
-      const img = document.getElementById(imgId);
-      const ph = document.querySelector(`[data-ph="${imgId}"]`);
-      const u = safeUrl(url);
-      if(!img) return;
-      if(!u){
-        img.removeAttribute("src");
-        img.style.display = "none";
-        if(ph) ph.style.display = "block";
-        return;
-      }
-      img.src = u;
-      img.style.display = "block";
-      if(ph) ph.style.display = "none";
-    }
-
-    function bindImgInputs(){
-      Object.values(imgMap).forEach(({input, imgId})=>{
-        if(!input) return;
-        input.addEventListener("input", ()=>{
-          setPosterImage(imgId, input.value.trim());
-        });
-      });
-    }
-    bindImgInputs();
-
-    function resetToDefaults(){
-      if(gateLinkInput) gateLinkInput.value = DEFAULTS.gateLink;
-      if(dropoffLinkInput) dropoffLinkInput.value = DEFAULTS.dropoffLink;
-      applyLinks();
-
-      if(imgGateUrl) imgGateUrl.value = DEFAULTS.imgs.gate;
-      if(imgDropoffUrl) imgDropoffUrl.value = DEFAULTS.imgs.dropoff;
-      if(imgQrUrl) imgQrUrl.value = DEFAULTS.imgs.qr;
-      if(imgS1Url) imgS1Url.value = DEFAULTS.imgs.s1;
-      if(imgS2Url) imgS2Url.value = DEFAULTS.imgs.s2;
-      if(imgS3Url) imgS3Url.value = DEFAULTS.imgs.s3;
-      if(imgS4Url) imgS4Url.value = DEFAULTS.imgs.s4;
-
-      Object.values(imgMap).forEach(({input, imgId})=>{
-        if(input) setPosterImage(imgId, input.value.trim());
-      });
-
-      showToast("已重置为默认图片/链接");
-    }
-
-    if(resetBtn) resetBtn.addEventListener("click", resetToDefaults);
-
-    // ===== export PNG (wait images) =====
-    function getVisibleImgs(container){
-      return Array.from(container.querySelectorAll("img"))
-        .filter(img => getComputedStyle(img).display !== "none" && img.src && img.src.trim().length > 0);
-    }
-    async function waitForAllImages(container, timeoutMs = 20000){
-      const imgs = getVisibleImgs(container);
-      if (imgs.length === 0) return;
-      const t0 = Date.now();
-
-      await Promise.all(imgs.map(async (img) => {
-        if (!(img.complete && img.naturalWidth > 0)) {
-          await new Promise((resolve) => {
-            const done = () => resolve();
-            img.addEventListener("load", done, { once:true });
-            img.addEventListener("error", done, { once:true });
-            setTimeout(done, timeoutMs);
-          });
-        }
-        if (img.decode) {
-          try {
-            const remain = Math.max(0, timeoutMs - (Date.now() - t0));
-            await Promise.race([
-              img.decode(),
-              new Promise(res => setTimeout(res, remain))
-            ]);
-          } catch (e) {}
-        }
-      }));
-
-      await new Promise(requestAnimationFrame);
-    }
-
-    if(exportBtn){
-      exportBtn.addEventListener("click", async ()=>{
-        exportBtn.disabled = true;
-        showToast("正在导出PNG（加载图片中）…");
-
-        const exportWidth = Math.max(800, Math.min(2600, Number((exportWidthInput && exportWidthInput.value) || 1600)));
-        const rect = poster.getBoundingClientRect();
-        const scale = exportWidth / rect.width;
-
-        try{
-          await waitForAllImages(poster, 25000);
-
-          const canvas = await html2canvas(poster, {
-            backgroundColor: "#ffffff",
-            scale,
-            useCORS: true,
-            allowTaint: true,
-            imageTimeout: 25000,
-            logging: false
-          });
-
-          const dataUrl = canvas.toDataURL("image/png");
-          const a = document.createElement("a");
-          const ts = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
-          a.download = `入校指引-${ts}.png`;
-          a.href = dataUrl;
-          a.click();
-          showToast("导出完成：已下载PNG");
-        }catch(err){
-          console.error(err);
-          alert("导出失败：可能是图片跨域/CORS 或加载超时。建议使用 jsDelivr 直链并重试。");
-        }finally{
-          exportBtn.disabled = false;
-        }
-      });
-    }
-
-    // ===== share link (texts + links + image URLs) =====
-    function collectState(){
-      const texts = {};
-      document.querySelectorAll('[data-key]').forEach(el=>{
-        texts[el.getAttribute('data-key')] = (el.innerText || "").trim();
-      });
-
-      const imgUrls = {};
-      Object.entries(imgMap).forEach(([k, v])=>{
-        imgUrls[k] = safeUrl((v.input && v.input.value || "").trim());
-      });
-
-      return {
-        v: 1,
-        texts,
-        links: {
-          gate: safeUrl((gateLinkInput && gateLinkInput.value || "").trim()),
-          dropoff: safeUrl((dropoffLinkInput && dropoffLinkInput.value || "").trim())
-        },
-        imgUrls
-      };
-    }
-
-    function applyState(state){
-      if(!state || typeof state !== "object") return;
-
-      if(state.texts){
-        Object.entries(state.texts).forEach(([k,v])=>{
-          const el = document.querySelector(`[data-key="${k}"]`);
-          if(el && typeof v === "string") el.innerText = v;
-        });
-      }
-
-      if(state.links){
-        if(gateLinkInput) gateLinkInput.value = state.links.gate || "";
-        if(dropoffLinkInput) dropoffLinkInput.value = state.links.dropoff || "";
-        applyLinks();
-      }
-
-      if(state.imgUrls){
-        Object.entries(imgMap).forEach(([k, v])=>{
-          const url = state.imgUrls[k] || "";
-          if(v.input) v.input.value = url;
-          setPosterImage(v.imgId, url);
-        });
-      }
-
-      if(state.texts && state.texts.producer && makerNameInput){
-        makerNameInput.value = state.texts.producer;
-      }
-    }
-
-    // ✅ 关键修复：分享链接前缀用 href（兼容 file:/// 与 https://）
-    function generateShareUrl(){
-      const state = collectState();
-      const packed = b64uEncode(JSON.stringify(state));
-      const base = window.location.href.split("?")[0];
-      return base + "?s=" + packed;
-    }
-
-    if(shareBtn){
-      shareBtn.addEventListener("click", ()=>{
-        const url = generateShareUrl();
-        if(shareLinkArea) shareLinkArea.value = url;
-        showToast("分享链接已生成（分享打开为只读展示）");
-      });
-    }
-
-    if(copyLinkBtn){
-      copyLinkBtn.addEventListener("click", async ()=>{
-        const url = (shareLinkArea && shareLinkArea.value || "").trim();
-        if(!url){ showToast("请先生成分享链接"); return; }
-        try{
-          await navigator.clipboard.writeText(url);
-          showToast("已复制到剪贴板");
-        }catch(e){
-          if(shareLinkArea){
-            shareLinkArea.select();
-            document.execCommand("copy");
-          }
-          showToast("已复制（兼容模式）");
-        }
-      });
-    }
-
-    if(openLinkBtn){
-      openLinkBtn.addEventListener("click", ()=>{
-        const url = (shareLinkArea && shareLinkArea.value || "").trim();
-        if(!url){ showToast("请先生成分享链接"); return; }
-        window.open(url, "_blank", "noopener");
-      });
-    }
-
-    // ===== 固化为默认并下载HTML（用于部署后不带 ?s= 也显示最终版） =====
-    function downloadText(filename, text){
-      const blob = new Blob([text], {type:"text/html;charset=utf-8"});
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = filename;
-      a.click();
-      setTimeout(()=> URL.revokeObjectURL(a.href), 2000);
-    }
-
-    function patchDefaultsInHtml(html, state){
-      // 1) 替换 DEFAULTS（让默认链接/默认图片 = 当前状态）
-      const newDefaults = {
-        gateLink: state.links?.gate || "",
-        dropoffLink: state.links?.dropoff || "",
-        imgs: state.imgUrls || {}
-      };
-
-      const defaultsRe = /const\s+DEFAULTS\s*=\s*\{[\s\S]*?\};/m;
-      html = html.replace(defaultsRe, `const DEFAULTS = ${JSON.stringify(newDefaults, null, 2)};`);
-
-      // 2) 注入 PRESET_TEXTS（默认文字 = 当前状态）
-      const preset = state.texts || {};
-      const presetRe = /const\s+PRESET_TEXTS\s*=\s*\{[\s\S]*?\};/m;
-
-      if(presetRe.test(html)){
-        html = html.replace(presetRe, `const PRESET_TEXTS = ${JSON.stringify(preset, null, 2)};`);
-      }else{
-        html = html.replace(/<script>/, `<script>\nconst PRESET_TEXTS = ${JSON.stringify(preset, null, 2)};\n`);
-      }
-
-      // 3) 修改 init：没有 s 时先应用 PRESET_TEXTS，再 resetToDefaults
-      const initRe = /\(function init\(\)\{[\s\S]*?\}\)\(\);/m;
-      html = html.replace(initRe,
-`(function init(){
-  const params = new URLSearchParams(window.location.search);
-  const s = params.get("s");
-  if(s){
-    try{
-      const json = b64uDecode(s);
-      const state = JSON.parse(json);
-      applyState(state);
-      showToast("已从分享链接载入内容");
-      return;
-    }catch(e){
-      console.warn(e);
-    }
+  if(isShare){
+    document.getElementById("editorPanel").style.display="none";
+    document.body.classList.add("readonly-mode");
+    document.querySelectorAll('[contenteditable]').forEach(el=>{
+      el.setAttribute("contenteditable","false");
+    });
   }
 
-  // 无参数：使用固化的默认文字 + 默认链接/图片
-  try{
-    if(typeof PRESET_TEXTS === "object" && PRESET_TEXTS){
-      Object.entries(PRESET_TEXTS).forEach(([k,v])=>{
-        const el = document.querySelector(\`[data-key="\${k}"]\`);
-        if(el && typeof v === "string") el.innerText = v;
-      });
-      if(PRESET_TEXTS.producer && makerNameInput) makerNameInput.value = PRESET_TEXTS.producer;
-    }
-  }catch(e){}
-
-  resetToDefaults();
-})();`
-      );
-
-      return html;
-    }
-
-    if(freezeBtn){
-      freezeBtn.addEventListener("click", ()=>{
-        const state = collectState();
-        const html = document.documentElement.outerHTML;
-        const out = patchDefaultsInHtml(html, state);
-        downloadText("guide.final.html", out);
-        showToast("已下载 guide.final.html（上传替换 guide.html 即可）");
-      });
-    }
-
-    // ===== init from URL =====
-    (function init(){
-      const params = new URLSearchParams(window.location.search);
-      const s = params.get("s");
-      if(s){
-        try{
-          const json = b64uDecode(s);
-          const state = JSON.parse(json);
-          applyState(state);
-          showToast("已从分享链接载入内容");
-          return;
-        }catch(e){
-          console.warn(e);
-        }
-      }
-      // first load: defaults
-      resetToDefaults();
-    })();
-
-    // prevent enter in top header text
-    document.querySelectorAll('.title[contenteditable], .uni[contenteditable], .badge[contenteditable]').forEach(el=>{
-      el.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter'){ e.preventDefault(); document.execCommand('insertLineBreak'); }
-      });
+  document.getElementById("shareBtn").onclick=()=>{
+    const data={};
+    document.querySelectorAll('[data-key]').forEach(el=>{
+      data[el.dataset.key]=el.innerText.trim();
     });
-  </script>
+    const s=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    const url=location.href.split("?")[0]+"?s="+s;
+    document.getElementById("shareLink").value=url;
+  };
+
+  if(isShare){
+    try{
+      const json=decodeURIComponent(escape(atob(params.get("s"))));
+      const data=JSON.parse(json);
+      Object.entries(data).forEach(([k,v])=>{
+        const el=document.querySelector(`[data-key="${k}"]`);
+        if(el) el.innerText=v;
+      });
+    }catch(e){}
+  }
+
+  document.getElementById("exportBtn").onclick=async()=>{
+    const c=await html2canvas(document.getElementById("poster"),{useCORS:true});
+    const a=document.createElement("a");
+    a.href=c.toDataURL("image/png");
+    a.download="入校指引.png";
+    a.click();
+  };
+})();
+</script>
 </body>
 </html>
